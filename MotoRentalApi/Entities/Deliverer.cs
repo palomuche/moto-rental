@@ -22,8 +22,7 @@ namespace MotoRentalApi.Entities
 
         public LicenseType DriverLicenseType { get; set; }
 
-        [NotMapped]
-        public byte[]? DriverLicenseImage { get; set; }
+        public string? DriverLicensePhotoPath { get; set; }
     }
 
 

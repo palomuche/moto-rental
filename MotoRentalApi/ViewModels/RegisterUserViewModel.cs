@@ -7,15 +7,19 @@ namespace MotoRentalApi.ViewModels
     {
 
         [Required]
+        public required string Username { get; set; }
+
+        [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "{0} must have between {2} and {1} characters")]
-        public string Password { get; set; }
+        public required string Password { get; set; }
 
+        [Required]
         [Compare("Password", ErrorMessage = "Passwords do not match.")]
-        public string ConfirmPassword { get; set; }
+        public required string ConfirmPassword { get; set; }
     }
 }

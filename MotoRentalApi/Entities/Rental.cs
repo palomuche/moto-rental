@@ -19,9 +19,34 @@ namespace MotoRentalApi.Entities
 
         public RentalPlanType RentalPlan { get; set; }
 
-        public int DelivererId { get; set; }
+        [ForeignKey("DelivererId")]
+        public virtual Deliverer? Deliverer { get; set; }
+        public required string DelivererId { get; set; }
 
+        [ForeignKey("MotoId")]
+        public virtual Moto? Moto { get; set; }
         public int MotoId { get; set; }
+
+
+        [NotMapped]
+        public decimal CostPerDay
+        {
+            get
+            {
+                // Calculate the cost per day based on the selected plan
+                switch (RentalPlan)
+                {
+                    case RentalPlanType.SevenDays: // 7-day plan
+                        return 30m;
+                    case RentalPlanType.FifteenDays: // 15-day plan
+                        return 28m;
+                    case RentalPlanType.ThirtyDays: // 30-day plan
+                        return 22m;
+                    default:
+                        throw new InvalidOperationException("Invalid rental plan.");
+                }
+            }
+        }
     }
 
     public enum RentalPlanType

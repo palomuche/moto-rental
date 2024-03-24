@@ -14,10 +14,17 @@ namespace MotoRentalApi.Data
 
         public DbSet<Moto> Motos { get; set; }
         public DbSet<Deliverer> Deliverers { get; set; }
+        public DbSet<Rental> Rentals { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Moto>()
+                .HasIndex(d => d.Plate)
+                .IsUnique();
 
             builder.Entity<Deliverer>().ToTable("Deliverers");
 

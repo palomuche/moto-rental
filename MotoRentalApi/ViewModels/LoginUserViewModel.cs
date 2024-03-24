@@ -6,13 +6,12 @@ namespace MotoRentalApi.ViewModels
     {
 
         [Required]
-        [EmailAddress(ErrorMessage = "{0} is invalid.")]
-        public string Email { get; set; }
+        public required string Username { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "{0} must have between {2} and {1} characters")]
-        public string Password { get; set; }
+        public required string Password { get; set; }
 
     }
 }

@@ -119,3 +119,5 @@ C:\Paulinho\Projetos\MotoRentalSolution\MotoRentalApi\bin\Debug\net8.0\Microsoft
 C:\Paulinho\Projetos\MotoRentalSolution\MotoRentalApi\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Paulinho\Projetos\MotoRentalSolution\MotoRentalApi\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\Paulinho\Projetos\MotoRentalSolution\MotoRentalApi\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Paulinho\Projetos\MotoRentalSolution\MotoRentalApi\bin\Debug\net8.0\RabbitMQ.Client.dll
+C:\Paulinho\Projetos\MotoRentalSolution\MotoRentalApi\bin\Debug\net8.0\Newtonsoft.Json.dll

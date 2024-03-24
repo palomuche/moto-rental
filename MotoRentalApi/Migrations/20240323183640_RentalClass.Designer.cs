@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MotoRentalApi.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MotoRentalApi.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240323183640_RentalClass")]
+    partial class RentalClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -248,62 +251,6 @@ namespace MotoRentalApi.Migrations
                     b.ToTable("Motos");
                 });
 
-            modelBuilder.Entity("MotoRentalApi.Entities.Notification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("DelivererId")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("NotificationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DelivererId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("Notifications");
-                });
-
-            modelBuilder.Entity("MotoRentalApi.Entities.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("DelivererId")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("DeliveryDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<decimal>("RidePrice")
-                        .HasColumnType("numeric");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DelivererId");
-
-                    b.ToTable("Orders");
-                });
-
             modelBuilder.Entity("MotoRentalApi.Entities.Rental", b =>
                 {
                     b.Property<int>("Id")
@@ -426,32 +373,6 @@ namespace MotoRentalApi.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("MotoRentalApi.Entities.Notification", b =>
-                {
-                    b.HasOne("MotoRentalApi.Entities.Deliverer", "Deliverer")
-                        .WithMany()
-                        .HasForeignKey("DelivererId");
-
-                    b.HasOne("MotoRentalApi.Entities.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Deliverer");
-
-                    b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("MotoRentalApi.Entities.Order", b =>
-                {
-                    b.HasOne("MotoRentalApi.Entities.Deliverer", "Deliverer")
-                        .WithMany()
-                        .HasForeignKey("DelivererId");
-
-                    b.Navigation("Deliverer");
                 });
 
             modelBuilder.Entity("MotoRentalApi.Entities.Rental", b =>
