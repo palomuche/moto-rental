@@ -9,7 +9,7 @@
             _storageDirectory = Path.Combine(webHostEnvironment.ContentRootPath, "Storage");
         }
 
-        public async Task<string> UploadPhoto(IFormFile file)
+        public string UploadPhoto(IFormFile file)
         {
             // Verifica se o diretório de armazenamento existe, se não, cria
             if (!Directory.Exists(_storageDirectory))
@@ -26,16 +26,16 @@
             // Salva o arquivo no disco
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                await file.CopyToAsync(stream);
+                file.CopyToAsync(stream);
             }
 
             return filePath;
         }
 
-        public async Task<byte[]> GetFileBytes(string filePath)
+        public byte[] GetFileBytes(string filePath)
         {
             // Lê os bytes do arquivo no disco
-            return await File.ReadAllBytesAsync(filePath);
+            return File.ReadAllBytes(filePath);
         }
     }
 }

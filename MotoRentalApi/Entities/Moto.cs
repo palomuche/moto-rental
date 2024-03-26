@@ -11,10 +11,13 @@ namespace MotoRentalApi.Entities
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public required string Year { get; set; }
+        [Required(ErrorMessage = "{0} is required")]
+        public string Year { get; set; }
 
-        public required string Model { get; set; }
-        
-        public required string Plate { get; set; }
+        [Required(ErrorMessage = "{0} is required")]
+        public string Model { get; set; }
+
+        [Required(ErrorMessage = "{0} is required")]
+        public string Plate { get; set; }
     }
 }

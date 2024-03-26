@@ -15,7 +15,7 @@ namespace MotoRentalApi.Entities
 
         public DateTime PredictedEndDate { get; set; }
 
-        public decimal TotalCost { get; set; }
+        public decimal? TotalCost { get; set; }
 
         public RentalPlanType RentalPlan { get; set; }
 
@@ -27,26 +27,6 @@ namespace MotoRentalApi.Entities
         public virtual Moto? Moto { get; set; }
         public int MotoId { get; set; }
 
-
-        [NotMapped]
-        public decimal CostPerDay
-        {
-            get
-            {
-                // Calculate the cost per day based on the selected plan
-                switch (RentalPlan)
-                {
-                    case RentalPlanType.SevenDays: // 7-day plan
-                        return 30m;
-                    case RentalPlanType.FifteenDays: // 15-day plan
-                        return 28m;
-                    case RentalPlanType.ThirtyDays: // 30-day plan
-                        return 22m;
-                    default:
-                        throw new InvalidOperationException("Invalid rental plan.");
-                }
-            }
-        }
     }
 
     public enum RentalPlanType

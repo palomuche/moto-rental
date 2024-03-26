@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -10,7 +9,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Http;
 
 namespace MotoRentalApi.Controllers
 {
@@ -23,21 +21,18 @@ namespace MotoRentalApi.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly JwtSettings _jwtSettings;
-        private readonly LocalStorageService _storageService;
 
         public AccountController(ApiDbContext context,
                               SignInManager<IdentityUser> signInManager,
                               UserManager<IdentityUser> userManager,
                               RoleManager<IdentityRole> roleManager,
-                              IOptions<JwtSettings> jwtSettings,
-                              LocalStorageService storageService)
+                              IOptions<JwtSettings> jwtSettings)
         {
             _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
             _jwtSettings = jwtSettings.Value;
-            _storageService = storageService;
         }
 
         [HttpPost("register-admin")]
@@ -76,6 +71,8 @@ namespace MotoRentalApi.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> RegisterDeliverer(RegisterDelivererViewModel model)
         {
+            model.CNPJ = Regex.Replace(model.CNPJ, "[^0-9]", "");
+
             // Check if CNPJ is unique
             var existingCnpj = _context.Deliverers.FirstOrDefault(m => m.CNPJ == model.CNPJ);
             if (existingCnpj != null)
@@ -113,7 +110,7 @@ namespace MotoRentalApi.Controllers
             var result = await _userManager.CreateAsync(deliverer, model.Password);
             if (!result.Succeeded)
             {
-                return BadRequest("Failed to create deliverer.");
+                return BadRequest("Failed to create deliverer. Error: " + result.Errors?.FirstOrDefault()?.Description);
             }
 
             if (result.Succeeded)
@@ -147,42 +144,6 @@ namespace MotoRentalApi.Controllers
             return BadRequest("Incorrect user or password.");
         }
 
-        [Authorize(Roles = "Deliverer")]
-        [HttpPost("deliverers/upload-photo")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UploadDriverLicencePhoto(IFormFile file)
-        {
-            var username = _userManager.GetUserName(User);
-            var user = await _userManager.FindByNameAsync(username);
-
-            if (user == null)
-            {
-                return NotFound("User not found.");
-            }
-            // Check if the deliverer exists
-            var deliverer = await _context.Deliverers.FindAsync(user.Id);
-            if (deliverer == null)
-            {
-                return NotFound("Deliverer not found.");
-            }
-
-            // Validate file format
-            if (file == null || (file.ContentType != "image/png" && file.ContentType != "image/bmp"))
-            {
-                return BadRequest("Invalid file format. The driver's license must be a PNG or BMP image.");
-            }
-
-            // Store the file in local disk
-            var filePath = await _storageService.UploadPhoto(file);
-
-            // Update the deliverer's record to include the reference to the driver's license photo file
-            deliverer.DriverLicensePhotoPath = filePath;
-            _context.SaveChanges();
-
-            return Ok("Driver's license photo uploaded successfully.");
-        }
 
         private async Task<string> GerarJwt(string username)
         {

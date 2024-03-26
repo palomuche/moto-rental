@@ -5,6 +5,7 @@ using MotoRentalApi.Data;
 using MotoRentalApi.Entities;
 using Microsoft.AspNetCore.Http;
 using System.Globalization;
+using Newtonsoft.Json;
 
 namespace MotoRentalApi.Controllers
 {
@@ -16,12 +17,15 @@ namespace MotoRentalApi.Controllers
 
         private readonly ApiDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly ILogger<RentalController> _logger;
 
-        public RentalController(ApiDbContext context, 
-                                UserManager<IdentityUser> userManager)
+        public RentalController(ApiDbContext context,
+                                UserManager<IdentityUser> userManager,
+                                ILogger<RentalController> logger)
         {
             _context = context;
             _userManager = userManager;
+            _logger = logger;
         }
 
         [HttpPost("rent/{rentalPlan:int}")]
@@ -45,8 +49,8 @@ namespace MotoRentalApi.Controllers
                 return BadRequest("Only deliverers with driver license category A or A+B are allowed to rent a motorcycle.");
             }
 
-            var startDate = DateTime.Today.AddDays(1);
-            var endDate = DateTime.Today.AddDays(1).AddDays((int)rentalPlan);
+            var startDate = DateTime.UtcNow.Date.AddDays(1);
+            var endDate = DateTime.UtcNow.Date.AddDays((int)rentalPlan);
 
             // Check if motorcycle is available
             var moto = GetAvailableMoto(startDate, endDate);
@@ -61,15 +65,24 @@ namespace MotoRentalApi.Controllers
                 PredictedEndDate = endDate,
                 RentalPlan = rentalPlan,
                 MotoId = moto.Id,
-                DelivererId = deliverer.Id,
-                TotalCost = GetDailyRate(rentalPlan) * (int)rentalPlan
+                DelivererId = deliverer.Id
             };
 
             // Save rental
             _context.Rentals.Add(rental);
             await _context.SaveChangesAsync();
 
-            return Ok($"Moto rented successfully. Id: {moto.Id}, Plate: {moto.Plate}");
+            var rentalInfo = new
+            {
+                MotoId = moto.Id,
+                Plate = moto.Plate,
+                RentalId = rental.Id,
+                StartDate = rental.StartDate.ToString("dd/MM/yyyy"),
+                PredictedEndDate = rental.PredictedEndDate.ToString("dd/MM/yyyy"),
+                Message = "Moto rented successfully."
+            };
+
+            return Ok(rentalInfo);
         }
 
         [HttpPost("return/{rentalId:int}")]
@@ -83,16 +96,13 @@ namespace MotoRentalApi.Controllers
             var deliverer = await _context.Deliverers.FindAsync(user.Id);
 
             var rental = _context.Rentals.FirstOrDefault(r => r.Id == rentalId && r.DelivererId == deliverer.Id);
-            if (rental == null)
-            {
-                return NotFound("Rental not found.");
-            }
+            if (rental == null) return NotFound("Rental not found.");
 
             var returnDate = returnDateTime.Date;
 
             // Calculate the days between the start date and the actual return date
-            var rentedDays = (returnDate - rental.StartDate).Days; // Including the return day
-            var predictedDays = (rental.PredictedEndDate - rental.StartDate).Days;
+            var rentedDays = (returnDate - rental.StartDate).Days + 1; // Including the return day
+            var predictedDays = (rental.PredictedEndDate - rental.StartDate).Days + 1;
             var dailyRate = GetDailyRate(rental.RentalPlan);
             var penaltyRate = GetPenaltyRate(rental.RentalPlan);
             var totalCost = 0m;
@@ -107,17 +117,21 @@ namespace MotoRentalApi.Controllers
                 decimal penaltyCost = unutilizedDays * dailyRate * penaltyRate;
                 totalCost = rentalPeriodCost + penaltyCost;
 
-                //return Ok(new
-                //{
-                //    RentalPlan = rental.RentalPlan,
-                //    RentedDays = rentedDays,
-                //    DailyRate = FormatCurrency(dailyRate),
-                //    RentalPeriodCost = FormatCurrency(rentalPeriodCost),
-                //    UnutilizedDays = unutilizedDays,
-                //    PenaltyRate = penaltyRate.ToString("P"),
-                //    PenaltyCost = FormatCurrency(penaltyCost),
-                //    TotalCost = FormatCurrency(totalCost),
-                //});
+                var costInfo = new
+                {
+                    RentalPlan = rental.RentalPlan,
+                    RentedDays = rentedDays,
+                    DailyRate = FormatCurrency(dailyRate),
+                    RentalPeriodCost = FormatCurrency(rentalPeriodCost),
+                    UnutilizedDays = unutilizedDays,
+                    PenaltyRate = penaltyRate.ToString("P"),
+                    PenaltyCost = FormatCurrency(penaltyCost),
+                    TotalCost = FormatCurrency(totalCost),
+                };
+
+                string costInfoJson = JsonConvert.SerializeObject(costInfo);
+
+                _logger.LogInformation(costInfoJson);
             }
             else
             {
@@ -130,30 +144,36 @@ namespace MotoRentalApi.Controllers
                 var totalExtraDaysCost = extraDays * extraDayCost; // Additional charge per extra day
                 totalCost = rentalPeriodCost + totalExtraDaysCost;
 
-                //return Ok(new
-                //{
-                //    RentalPlan = rental.RentalPlan,
-                //    DailyRate = FormatCurrency(dailyRate),
-                //    RentalPeriodCost = FormatCurrency(rentalPeriodCost),
-                //    ExtraDays = extraDays,
-                //    CostPerExtraDay = FormatCurrency(extraDayCost),
-                //    TotalCostExtraDays = FormatCurrency(totalExtraDaysCost),
-                //    TotalCost = FormatCurrency(totalCost),
-                //});
+                var costInfo = new
+                {
+                    RentalPlan = rental.RentalPlan,
+                    DailyRate = FormatCurrency(dailyRate),
+                    RentalPeriodCost = FormatCurrency(rentalPeriodCost),
+                    ExtraDays = extraDays,
+                    CostPerExtraDay = FormatCurrency(extraDayCost),
+                    TotalCostExtraDays = FormatCurrency(totalExtraDaysCost),
+                    TotalCost = FormatCurrency(totalCost),
+                };
+                string costInfoJson = JsonConvert.SerializeObject(costInfo);
+
+                _logger.LogInformation(costInfoJson);
             }
 
-            return Ok(new { TotalCost = totalCost });
+            rental.TotalCost = totalCost;
+            rental.EndDate = returnDate;
+            _context.Update(rental);
+            _context.SaveChanges();
+
+            return Ok(new { TotalCost = totalCost, Message = "The return date has been successfully recorded." });
         }
 
 
         private Moto GetAvailableMoto(DateTime startDate, DateTime endDate)
         {
-            startDate = startDate.ToUniversalTime();
-            endDate = endDate.ToUniversalTime();
-
             var occupiedMotos = _context.Rentals
-                .Where(r => r.EndDate.HasValue &&
-                            ((r.StartDate < endDate && r.EndDate > startDate)))
+                .Where(r => r.EndDate == null ||
+                        (r.StartDate <= endDate && startDate <= r.EndDate)
+                )
                 .Select(r => r.MotoId)
                 .Distinct();
 

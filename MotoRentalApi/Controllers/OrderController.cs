@@ -7,7 +7,6 @@ using MotoRentalApi.Entities;
 using MotoRentalApi.ViewModels;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 using System.Text;
 
 namespace MotoRentalApi.Controllers
@@ -18,7 +17,6 @@ namespace MotoRentalApi.Controllers
     public class OrderController : Controller
     {
         private readonly ApiDbContext _context;
-        private readonly ConnectionFactory _factory;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<OrderController> _logger;
 
@@ -27,10 +25,32 @@ namespace MotoRentalApi.Controllers
                               ILogger<OrderController> logger)
         {
             _context = context;
-            _factory = new ConnectionFactory() { HostName = "localhost" };
             _userManager = userManager;
             _logger = logger;
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult Get()
+        {
+            var notifications = _context.Orders
+                .Include(n => n.Deliverer)
+                .ToList()
+                .Select(s => new {
+                    OrderId = s.Id,
+                    CreationDate = s.CreationDate.ToLocalTime().ToString("dd/MM/yyyy HH:mm"),
+                    RidePrice = s.RidePrice,
+                    Status = s.Status.ToString(),
+                    DelivererId = s.DelivererId,
+                    DelivererUserName = s.Deliverer?.UserName,
+                    DelivererName = s.Deliverer?.Name,
+                    DeliveryDate = s.DeliveryDate?.ToLocalTime().ToString("dd/MM/yyyy HH:mm"),
+                });
+
+            return Ok(notifications);
+        }
+
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
@@ -41,6 +61,7 @@ namespace MotoRentalApi.Controllers
             var order = new Order
             {
                 RidePrice = registerOrder.RidePrice,
+                Status = OrderStatus.Available,
             };
 
             _context.Add(order);
@@ -59,102 +80,30 @@ namespace MotoRentalApi.Controllers
 
             var deliverersIdsToNotify = deliverersIds.Except(deliverersIdsWithOrder).ToList();
 
+            var factory = new ConnectionFactory() { HostName = "localhost" };
+
             foreach (var delivererId in deliverersIdsToNotify)
             {
-                using (var connection = _factory.CreateConnection())
+                using (var connection = factory.CreateConnection())
                 using (var channel = connection.CreateModel())
                 {
-                    channel.QueueDeclare(queue: "notification_queue_" + delivererId,
+                    channel.QueueDeclare(queue: "notification_queue",
                                          durable: false,
                                          exclusive: false,
                                          autoDelete: false,
                                          arguments: null);
 
-                    string message = JsonConvert.SerializeObject(order);
+                    string message = JsonConvert.SerializeObject(new { OrderId = order.Id, DelivererId = delivererId } );
                     var body = Encoding.UTF8.GetBytes(message);
 
                     channel.BasicPublish(exchange: "",
-                                         routingKey: "notification_queue_" + delivererId,
+                                         routingKey: "notification_queue",
                                          basicProperties: null,
                                          body: body);
                 }
             }
 
-            return Ok($"Order {order.Id} created.");
-        }
-
-        [Authorize(Roles = "Deliverer")]
-        [HttpGet("consume-notifications")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult ConsumeNotifications()
-        {
-            var username = _userManager.GetUserName(User);
-            var deliverer = _userManager.FindByNameAsync(username).Result;
-
-            if (deliverer == null) return NotFound("User not found.");
-
-            using (var connection = _factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
-                channel.QueueDeclare(queue: "notification_queue_" + deliverer.Id,
-                                     durable: false,
-                                     exclusive: false,
-                                     autoDelete: false,
-                                     arguments: null);
-
-                var consumer = new EventingBasicConsumer(channel);
-                int? orderId = null;
-                consumer.Received += (model, ea) =>
-                {
-                    _logger.LogInformation(ea.ToString());
-                    var body = ea.Body.ToArray();
-                    if (body.Length > 0)
-                    {
-                        var message = Encoding.UTF8.GetString(body);
-
-                        _logger.LogInformation(message);
-
-                        dynamic orderInfo = JsonConvert.DeserializeObject(message);
-                        orderId = orderInfo.Id;
-
-                        var configuration = new ConfigurationBuilder()
-                            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                            .AddJsonFile("appsettings.json")
-                            .Build();
-
-                        var connectionString = configuration.GetConnectionString("DefaultConnection");
-                        var serviceCollection = new ServiceCollection();
-
-                        serviceCollection.AddDbContext<ApiDbContext>(options =>
-                            options.UseNpgsql(connectionString));
-
-                        var serviceProvider = serviceCollection.BuildServiceProvider();
-
-                        using (var scope = serviceProvider.CreateScope())
-                        {
-                            var context = scope.ServiceProvider.GetRequiredService<ApiDbContext>();
-                            var notification = new Notification
-                            {
-                                DelivererId = deliverer.Id,
-                                OrderId = (int)orderId,
-                            };
-                            context.Notifications.Add(notification);
-                            context.SaveChanges();
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception("Received empty message.");
-                    }
-                };
-
-                channel.BasicConsume(queue: "notification_queue_" + deliverer.Id,
-                                        autoAck: true,
-                                        consumer: consumer);
-            }
-
-            return Ok("Started consuming notifications for DelivererId=" + deliverer.Id);
+            return Ok(new { OrderId = order.Id, Message = "Order created."});
         }
 
 

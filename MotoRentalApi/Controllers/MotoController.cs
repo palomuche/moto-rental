@@ -102,13 +102,16 @@ namespace MotoRentalApi.Controllers
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Delete(int id)
         {
             var moto = _context.Motos.Find(id);
 
             if (moto == null) return NotFound();
             
-            // Verifica se a moto esta locada, se estiver locada não deixar deletar
+            var rented = _context.Rentals.Any(m => m.MotoId == id);
+
+            if (rented) return BadRequest("Unable to delete. The moto has rental records.");
 
             _context.Motos.Remove(moto);
             _context.SaveChanges();
@@ -125,7 +128,6 @@ namespace MotoRentalApi.Controllers
             return regex.IsMatch(plate);
         }
 
-
         private string CleanPlate(string plate)
         {
             return Regex.Replace(plate.ToUpper(), "[^a-zA-Z0-9]", "");
@@ -135,11 +137,5 @@ namespace MotoRentalApi.Controllers
         {
             return !_context.Motos.Any(m => m.Plate == plate);
         }
-
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<Moto>>> Get()
-        //{
-        //    return await _context.Motos.ToListAsync();
-        //}
     }
 }
