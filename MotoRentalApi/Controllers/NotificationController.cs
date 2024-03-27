@@ -39,6 +39,7 @@ namespace MotoRentalApi.Controllers
             var notifications = _context.Notifications
                 .Include(n => n.Deliverer)
                 .Include(n => n.Order)
+                .OrderBy(n => n.Id)
                 .ToList()
                 .Select(s => new {
                     NotificationId = s.Id,

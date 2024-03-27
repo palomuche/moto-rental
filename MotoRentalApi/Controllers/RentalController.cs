@@ -88,7 +88,8 @@ namespace MotoRentalApi.Controllers
         [HttpPost("return/{rentalId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        public IActionResult Post(int rentalId, [FromBody] DateTime returnDateTime)
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public IActionResult Post(int rentalId, [FromBody] DateTime returnDateTime, bool simulate = false)
         {
             // Get the authenticated user
             var username = _userManager.GetUserName(User);
@@ -97,6 +98,8 @@ namespace MotoRentalApi.Controllers
 
             var rental = _context.Rentals.FirstOrDefault(r => r.Id == rentalId && r.DelivererId == deliverer.Id);
             if (rental == null) return NotFound("Rental not found.");
+
+            if (rental.EndDate != null && !simulate) return BadRequest("Moto already returned.");
 
             var returnDate = returnDateTime.Date;
 
@@ -130,8 +133,9 @@ namespace MotoRentalApi.Controllers
                 };
 
                 string costInfoJson = JsonConvert.SerializeObject(costInfo);
-
                 _logger.LogInformation(costInfoJson);
+
+                if(simulate) return Ok(costInfoJson);
             }
             else
             {
@@ -154,9 +158,11 @@ namespace MotoRentalApi.Controllers
                     TotalCostExtraDays = FormatCurrency(totalExtraDaysCost),
                     TotalCost = FormatCurrency(totalCost),
                 };
-                string costInfoJson = JsonConvert.SerializeObject(costInfo);
 
+                string costInfoJson = JsonConvert.SerializeObject(costInfo);
                 _logger.LogInformation(costInfoJson);
+
+                if (simulate) return Ok(costInfoJson);
             }
 
             rental.TotalCost = totalCost;

@@ -36,6 +36,7 @@ namespace MotoRentalApi.Controllers
         {
             var notifications = _context.Orders
                 .Include(n => n.Deliverer)
+                .OrderBy(n => n.Id)
                 .ToList()
                 .Select(s => new {
                     OrderId = s.Id,
@@ -63,12 +64,8 @@ namespace MotoRentalApi.Controllers
                 RidePrice = registerOrder.RidePrice,
                 Status = OrderStatus.Available,
             };
-
-            _context.Add(order);
-            _context.SaveChanges();
-
             var deliverersIds = _context.Rentals
-                .Where(r => r.EndDate == null) // Active rentals
+                .Where(r => r.EndDate == null) // Active rentals - not returned
                 .Select(r => r.DelivererId)
                 .Distinct()
                 .ToList();
@@ -79,6 +76,11 @@ namespace MotoRentalApi.Controllers
                 .ToList();
 
             var deliverersIdsToNotify = deliverersIds.Except(deliverersIdsWithOrder).ToList();
+
+            if (!deliverersIdsToNotify.Any()) return BadRequest(new { Message = "Order not created. There are no deliverers avaiable." });
+
+            _context.Add(order);
+            _context.SaveChanges();
 
             var factory = new ConnectionFactory() { HostName = "localhost" };
 
@@ -118,7 +120,8 @@ namespace MotoRentalApi.Controllers
             if (deliverer == null) return NotFound("User not found.");
 
             var notification = _context.Notifications
-                .FirstOrDefault(m => m.OrderId == orderId && m.DelivererId == deliverer.Id);
+                .Include(x => x.Order)
+                .FirstOrDefault(m => m.OrderId == orderId && m.DelivererId == deliverer.Id && m.Order.Status == OrderStatus.Available);
 
             if (notification == null) return NotFound("Notification not found.");
 
@@ -145,7 +148,7 @@ namespace MotoRentalApi.Controllers
             var deliverer = _userManager.FindByNameAsync(username).Result;
             if (deliverer == null) return NotFound("User not found.");
 
-            var order = _context.Orders.Find(orderId);
+            var order = _context.Orders.FirstOrDefault(m => m.Id == orderId && m.DelivererId == deliverer.Id && m.Status == OrderStatus.Accepted);
 
             if (order == null) return NotFound("Order not found");
 

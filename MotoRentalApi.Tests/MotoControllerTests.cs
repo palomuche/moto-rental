@@ -50,7 +50,7 @@
             Assert.Equal(200, result.StatusCode);
         }
 
-        [Fact(DisplayName = "Post")]
+        [Fact(DisplayName = "Post return success")]
         public void Post_Creates_New_Moto()
         {
             // Arrange
@@ -94,7 +94,7 @@
             Assert.Equal("Plate already exists.", result.Value);
         }
 
-        [Fact(DisplayName = "Put")]
+        [Fact(DisplayName = "Put return success")]
         public void Put_Updates_Moto()
         {
             // Arrange
@@ -112,7 +112,7 @@
             Assert.Equal(newPlate, updatedMoto.Plate);
         }
 
-        [Fact(DisplayName = "Delete")]
+        [Fact(DisplayName = "Delete return success")]
         public void Delete_Removes_Moto()
         {
             // Arrange

@@ -813,7 +813,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"year\": \"2020\",\r\n  \"model\": \"Ninja 650\",\r\n  \"plate\": \"GHI9A15\"\r\n}"
+							"raw": "{\r\n  \"year\": \"2021\",\r\n  \"model\": \"Ninja 650\",\r\n  \"plate\": \"ABC1234\"\r\n}"
 						},
 						"url": {
 							"raw": "https://localhost:7284/api/moto",
@@ -1213,7 +1213,7 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:7284/api/moto/2?plate=DDD1834",
+							"raw": "https://localhost:7284/api/moto/1?plate=ABC1234",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -1222,12 +1222,12 @@
 							"path": [
 								"api",
 								"moto",
-								"2"
+								"1"
 							],
 							"query": [
 								{
 									"key": "plate",
-									"value": "DDD1834"
+									"value": "ABC1234"
 								}
 							]
 						}
@@ -1634,7 +1634,7 @@
 					]
 				},
 				{
-					"name": "return/{rentalId}",
+					"name": "return/{rentalId}?simulate={bool}",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -1654,10 +1654,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "\"2024-03-31T19:38:03.878Z\""
+							"raw": "\"2024-05-01T19:38:03.878Z\""
 						},
 						"url": {
-							"raw": "https://localhost:7284/api/rental/return/8",
+							"raw": "https://localhost:7284/api/rental/return/1?simulate=false",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -1667,7 +1667,13 @@
 								"api",
 								"rental",
 								"return",
-								"8"
+								"1"
+							],
+							"query": [
+								{
+									"key": "simulate",
+									"value": "false"
+								}
 							]
 						}
 					},
@@ -1999,7 +2005,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"creationDate\": \"2024-03-27T00:00:49.458Z\",\r\n  \"ridePrice\": 200,\r\n  \"status\": 0\r\n}"
+							"raw": "{\r\n  \"ridePrice\": 100\r\n}"
 						},
 						"url": {
 							"raw": "https://localhost:7284/api/order",
@@ -2097,7 +2103,7 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:7284/api/order/take-order/20",
+							"raw": "https://localhost:7284/api/order/take-order/1",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -2107,7 +2113,7 @@
 								"api",
 								"order",
 								"take-order",
-								"20"
+								"1"
 							]
 						}
 					},
@@ -2192,7 +2198,7 @@
 							}
 						],
 						"url": {
-							"raw": "https://localhost:7284/api/order/deliver-order/20",
+							"raw": "https://localhost:7284/api/order/deliver-order/1",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -2202,7 +2208,7 @@
 								"api",
 								"order",
 								"deliver-order",
-								"20"
+								"1"
 							]
 						}
 					},

@@ -25,7 +25,7 @@ namespace MotoRentalApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Get()
         {
-            var motos = _context.Motos.ToList();
+            var motos = _context.Motos.OrderBy(n => n.Id).ToList();
 
             return Ok(motos);
         }
