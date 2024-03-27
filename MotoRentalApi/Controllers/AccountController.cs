@@ -21,56 +21,80 @@ namespace MotoRentalApi.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly JwtSettings _jwtSettings;
+        private readonly ILogger<AccountController> _logger;
 
         public AccountController(ApiDbContext context,
                               SignInManager<IdentityUser> signInManager,
                               UserManager<IdentityUser> userManager,
                               RoleManager<IdentityRole> roleManager,
-                              IOptions<JwtSettings> jwtSettings)
+                              IOptions<JwtSettings> jwtSettings,
+                              ILogger<AccountController> logger)
         {
             _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
             _jwtSettings = jwtSettings.Value;
+            _logger = logger;
         }
 
         [HttpPost("register-admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Register(RegisterUserViewModel registerUser)
         {
-            var user = new IdentityUser
+            try
             {
-                UserName = registerUser.Username,
-                Email = registerUser.Email,
-                EmailConfirmed = true
-            };
-
-            var result = await _userManager.CreateAsync(user, registerUser.Password);
-
-            if (result.Succeeded)
-            {
-                if (!await _roleManager.RoleExistsAsync("Admin"))
+                // Create a new user with the provided data
+                var user = new IdentityUser
                 {
-                    await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                    UserName = registerUser.Username,
+                    Email = registerUser.Email,
+                    EmailConfirmed = true
+                };
+
+                // Try to create the user in the database
+                var result = await _userManager.CreateAsync(user, registerUser.Password);
+
+                if (result.Succeeded)
+                {
+                    // If the user was successfully created, check if the "Admin" role exists
+                    if (!await _roleManager.RoleExistsAsync("Admin"))
+                    {
+                        // If the role doesn't exist, create it
+                        await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                    }
+
+                    // Add the user to the "Admin" role
+                    await _userManager.AddToRoleAsync(user, "Admin");
+
+                    // Sign in with the newly created user
+                    await _signInManager.SignInAsync(user, false);
+
+                    // Return a JWT token for the user
+                    return Ok(await GenerateJwt(user.UserName));
                 }
-
-                await _userManager.AddToRoleAsync(user, "Admin");
-
-                await _signInManager.SignInAsync(user, false);
-                return Ok(await GerarJwt(user.UserName));
+                else
+                {
+                    // If there was a failure in creating the user, return a BadRequest response with error details
+                    return BadRequest("Failed to create user. Error: " + result.Errors?.FirstOrDefault()?.Description);
+                }
             }
-
-            return BadRequest("Error occurred while registering the user.");
+            catch (Exception ex)
+            {
+                // In case of unhandled exception, log the error and return a StatusCode 500 (Internal Server Error) response
+                _logger.LogError(ex, "An exception occurred while trying to register a new user.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An internal error occurred while processing the request.");
+            }
         }
 
         [HttpPost("register-deliverer")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesDefaultResponseType]
         public async Task<IActionResult> RegisterDeliverer(RegisterDelivererViewModel model)
         {
+            // Clean CNPJ by removing non-numeric characters
             model.CNPJ = Regex.Replace(model.CNPJ, "[^0-9]", "");
 
             // Check if CNPJ is unique
@@ -79,11 +103,11 @@ namespace MotoRentalApi.Controllers
             {
                 return BadRequest("CNPJ already exists.");
             }
-            else
+
+            // Validate CNPJ format
+            if (!IsCnpj(model.CNPJ))
             {
-                // Check if CNPJ is valid
-                if (!IsCnpj(model.CNPJ))
-                    return BadRequest("Invalid CNPJ.");
+                return BadRequest("Invalid CNPJ.");
             }
 
             // Check if Driver License Number is unique
@@ -106,27 +130,30 @@ namespace MotoRentalApi.Controllers
                 DriverLicenseType = model.DriverLicenseType,
             };
 
-            // Create deliverer
+            // Attempt to create the deliverer account
             var result = await _userManager.CreateAsync(deliverer, model.Password);
-            if (!result.Succeeded)
-            {
-                return BadRequest("Failed to create deliverer. Error: " + result.Errors?.FirstOrDefault()?.Description);
-            }
-
             if (result.Succeeded)
             {
+                // Ensure the "Deliverer" role exists
                 if (!await _roleManager.RoleExistsAsync("Deliverer"))
                 {
                     await _roleManager.CreateAsync(new IdentityRole("Deliverer"));
                 }
 
+                // Assign the "Deliverer" role to the newly created user
                 await _userManager.AddToRoleAsync(deliverer, "Deliverer");
 
+                // Sign in the deliverer
                 await _signInManager.SignInAsync(deliverer, false);
-                return Ok(await GerarJwt(deliverer.UserName));
-            }
 
-            return BadRequest("Error occurred while registering the user.");
+                // Generate and return a JWT token
+                return Ok(await GenerateJwt(deliverer.UserName));
+            }
+            else
+            {
+                // If creation failed, return an error with the first issue encountered
+                return BadRequest("Failed to create deliverer. Error: " + result.Errors?.FirstOrDefault()?.Description);
+            }
         }
 
         [HttpPost("login")]
@@ -134,18 +161,26 @@ namespace MotoRentalApi.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Login(LoginUserViewModel loginUser)
         {
+            // Attempt to sign in the user with the provided credentials
             var result = await _signInManager.PasswordSignInAsync(loginUser.Username, loginUser.Password, false, true);
 
+            // If sign-in succeeded, return a JWT token
             if (result.Succeeded)
             {
-                return Ok(await GerarJwt(loginUser.Username));
+                return Ok(await GenerateJwt(loginUser.Username));
+            }
+            else
+            {
+                // If sign-in failed, return a BadRequest response indicating incorrect user or password
+                return BadRequest("Incorrect user or password.");
             }
 
-            return BadRequest("Incorrect user or password.");
         }
 
-
-        private async Task<string> GerarJwt(string username)
+        /// <summary>
+        /// Generates a JSON Web Token (JWT) for a specified username.
+        /// </summary>
+        private async Task<string> GenerateJwt(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
             var roles = await _userManager.GetRolesAsync(user);
@@ -177,7 +212,9 @@ namespace MotoRentalApi.Controllers
             return encodedToken;
         }
 
-
+        /// <summary>
+        /// Checks whether a given string represents a valid CNPJ
+        /// </summary>
         private static bool IsCnpj(string cnpj)
         {
             cnpj = Regex.Replace(cnpj, "[^0-9]", "");

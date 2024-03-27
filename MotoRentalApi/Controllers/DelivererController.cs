@@ -30,7 +30,7 @@ namespace MotoRentalApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        public ActionResult UploadDriverLicencePhoto(IFormFile file)
+        public IActionResult UploadDriverLicencePhoto(IFormFile file)
         {
             // Check if the deliverer exists
             var username = _userManager.GetUserName(User);

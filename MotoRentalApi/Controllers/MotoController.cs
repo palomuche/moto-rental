@@ -79,16 +79,27 @@ namespace MotoRentalApi.Controllers
             var cleanPlate = CleanPlate(plate);
 
             if (!IsPlateValid(cleanPlate))
-                return BadRequest("Invalid plate format.");
+            {
+                var errorMessage = "Failed to update moto. Invalid plate format.";
+                _logger.LogError(errorMessage);
+                return BadRequest(errorMessage);
+            }
 
             var moto = _context.Motos.FirstOrDefault(m => m.Id == id);
 
-            if (moto == null) 
+            if (moto == null)
+            {
+                _logger.LogError("Failed to update moto. Id not found.");
                 return NotFound();
+            }
 
 
             if (CleanPlate(moto.Plate) != cleanPlate && !IsPlateUnique(cleanPlate))
-                return BadRequest("Plate already exists.");
+            {
+                var errorMessage = "Failed to update moto. Plate already exists.";
+                _logger.LogError(errorMessage);
+                return BadRequest(errorMessage);
+            }
 
             moto.Plate = cleanPlate;
 
@@ -107,11 +118,20 @@ namespace MotoRentalApi.Controllers
         {
             var moto = _context.Motos.Find(id);
 
-            if (moto == null) return NotFound();
+            if (moto == null)
+            {
+                _logger.LogError("Failed to delete moto. Id not found.");
+                return NotFound();
+            }
             
             var rented = _context.Rentals.Any(m => m.MotoId == id);
 
-            if (rented) return BadRequest("Unable to delete. The moto has rental records.");
+            if (rented)
+            {
+                var errorMessage = "Unable to delete. The moto has rental records.";
+                _logger.LogError(errorMessage);
+                return BadRequest(errorMessage);
+            }
 
             _context.Motos.Remove(moto);
             _context.SaveChanges();

@@ -31,12 +31,12 @@ namespace MotoRentalApi.Controllers
         [HttpPost("rent/{rentalPlan:int}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Post(RentalPlanType rentalPlan)
+        public ActionResult Post(RentalPlanType rentalPlan)
         {
             // Get the authenticated user
             var username = _userManager.GetUserName(User);
-            var user = await _userManager.FindByNameAsync(username);
-            var deliverer = await _context.Deliverers.FindAsync(user.Id);
+            var user = _userManager.FindByNameAsync(username).Result;
+            var deliverer = _context.Deliverers.FindAsync(user.Id).Result;
 
             if (deliverer == null)
             {
@@ -70,7 +70,7 @@ namespace MotoRentalApi.Controllers
 
             // Save rental
             _context.Rentals.Add(rental);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             var rentalInfo = new
             {
@@ -88,12 +88,12 @@ namespace MotoRentalApi.Controllers
         [HttpPost("return/{rentalId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Post(int rentalId, [FromBody] DateTime returnDateTime)
+        public IActionResult Post(int rentalId, [FromBody] DateTime returnDateTime)
         {
             // Get the authenticated user
             var username = _userManager.GetUserName(User);
-            var user = await _userManager.FindByNameAsync(username);
-            var deliverer = await _context.Deliverers.FindAsync(user.Id);
+            var user = _userManager.FindByNameAsync(username).Result;
+            var deliverer = _context.Deliverers.FindAsync(user.Id).Result;
 
             var rental = _context.Rentals.FirstOrDefault(r => r.Id == rentalId && r.DelivererId == deliverer.Id);
             if (rental == null) return NotFound("Rental not found.");

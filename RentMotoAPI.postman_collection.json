@@ -1,0 +1,2514 @@
+{
+	"info": {
+		"_postman_id": "95e586b7-39a6-4c06-a571-9c3940e248f0",
+		"name": "RentMotoAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11619173"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "register-admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"token-admin\", pm.response.text());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"admin\",\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"Teste@123\",\r\n  \"confirmPassword\": \"Teste@123\"\r\n}"
+						},
+						"url": {
+							"raw": "https://localhost:7284/api/account/register-admin",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"account",
+								"register-admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login-admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"token-admin\", pm.response.text());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"admin\",\r\n  \"password\": \"Teste@123\"\r\n}"
+						},
+						"url": {
+							"raw": "https://localhost:7284/api/account/login",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"account",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register-deliverer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"token-deliverer\", pm.response.text());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"deliverer\",\r\n  \"email\": \"deliverer@example.com\",\r\n  \"password\": \"Teste@123\",\r\n  \"confirmPassword\": \"Teste@123\",\r\n  \"name\": \"Deliverer 1\",\r\n  \"cnpj\": \"20.163.762/0001-16\", // Valid cnpj\r\n  \"birthDate\": \"1994-03-23T19:05:17.022Z\", // Format \"yyyy-MM-ddTHH:mm:ss.fffZ\"\r\n  \"driverLicenseNumber\": \"1234567890\",\r\n  \"driverLicenseType\": 0 // 0 - A ; 1 - B ; 2 - A+B\r\n}"
+						},
+						"url": {
+							"raw": "https://localhost:7284/api/account/register-deliverer",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"account",
+								"register-deliverer"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "CNPJ exists",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "text/plain"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"deliverer\",\r\n  \"email\": \"ddd@example.com\",\r\n  \"password\": \"Teste@123\",\r\n  \"confirmPassword\": \"Teste@123\",\r\n  \"name\": \"Paulinho\",\r\n  \"cnpj\": \"42.747.521/0001-57\",\r\n  \"birthDate\": \"1994-03-23T19:05:17.022Z\",\r\n  \"driverLicenseNumber\": \"435346346\",\r\n  \"driverLicenseType\": 0 // 0 - A ; 1 - B ; 2 - A+B\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:7284/api/account/register-deliverer",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"account",
+										"register-deliverer"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 18:57:04 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "CNPJ already exists."
+						},
+						{
+							"name": "Invalid CNPJ",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "text/plain"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"deliverer\",\r\n  \"email\": \"ddd@example.com\",\r\n  \"password\": \"Teste@123\",\r\n  \"confirmPassword\": \"Teste@123\",\r\n  \"name\": \"Paulinho\",\r\n  \"cnpj\": \"42.747.521/0001-55\",\r\n  \"birthDate\": \"1994-03-23T19:05:17.022Z\",\r\n  \"driverLicenseNumber\": \"435346346\",\r\n  \"driverLicenseType\": 0 // 0 - A ; 1 - B ; 2 - A+B\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:7284/api/account/register-deliverer",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"account",
+										"register-deliverer"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 18:57:30 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "Invalid CNPJ."
+						},
+						{
+							"name": "Driver license exists",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "text/plain"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"deliverer\",\r\n  \"email\": \"ddd@example.com\",\r\n  \"password\": \"Teste@123\",\r\n  \"confirmPassword\": \"Teste@123\",\r\n  \"name\": \"Paulinho\",\r\n  \"cnpj\": \"77.545.828/0001-50\",\r\n  \"birthDate\": \"1994-03-23T19:05:17.022Z\",\r\n  \"driverLicenseNumber\": \"435346346\",\r\n  \"driverLicenseType\": 0 // 0 - A ; 1 - B ; 2 - A+B\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:7284/api/account/register-deliverer",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"account",
+										"register-deliverer"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 19:00:23 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "Driver license number already exists."
+						},
+						{
+							"name": "Duplicate username",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "text/plain"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"deliverer\",\r\n  \"email\": \"ddd@example.com\",\r\n  \"password\": \"Teste@123\",\r\n  \"confirmPassword\": \"Teste@123\",\r\n  \"name\": \"Paulinho\",\r\n  \"cnpj\": \"77.545.828/0001-50\",\r\n  \"birthDate\": \"1994-03-23T19:05:17.022Z\",\r\n  \"driverLicenseNumber\": \"436367777\",\r\n  \"driverLicenseType\": 0 // 0 - A ; 1 - B ; 2 - A+B\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:7284/api/account/register-deliverer",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"account",
+										"register-deliverer"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 19:03:50 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "Failed to create deliverer. Error: Username 'deliverer' is already taken."
+						},
+						{
+							"name": "Success + token",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "text/plain"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"deliverer3\",\r\n  \"email\": \"ddd@example.com\",\r\n  \"password\": \"Teste@123\",\r\n  \"confirmPassword\": \"Teste@123\",\r\n  \"name\": \"Paulinho\",\r\n  \"cnpj\": \"77.545.828/0001-50\",\r\n  \"birthDate\": \"1994-03-23T19:05:17.022Z\",\r\n  \"driverLicenseNumber\": \"436367777\",\r\n  \"driverLicenseType\": 0 // 0 - A ; 1 - B ; 2 - A+B\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:7284/api/account/register-deliverer",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"account",
+										"register-deliverer"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 19:04:16 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache,no-store"
+								},
+								{
+									"key": "Expires",
+									"value": "Thu, 01 Jan 1970 00:00:00 GMT"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": ".AspNetCore.Identity.Application=CfDJ8D13NAiRmt1KqNRykYF4f4_shyaOQlW0KXaJcQDz7Wtb7iM0mtfDtCMnyjeDZK6Ig2CmK66taiP63pOPIBAsMT8bw4OYyQ8wZfHfAMKDUzU5A6Ny7do7H9ONG6W2TT6FNgxsSnK1_yM7z8CkK8qtHZvCPlm2CIpR01_kwOV9L7wqnZgB3xQbHyeO_8X1wS_sDTXOmLCUBKdOGh3mhR87TMegUNyg692PF04QM1--SQsuBhXWycLRC6-ilhyJaEyGFS7fy7LI4wa_fmVARFezYdEKpOCkBgSXUg3jtELX0STd1WPcnH_jg5wzaoWc2wixjfwf8PRnqg4DTf3B7ilm8pZQBE1cTv6TeDU-ryDfZ6265ta2Vkz30XEpd5LNIgGhDbhJ0zLoL3LkUaD5VUcpK0_vbUNagPV7crMSCyZeugT0TyNZd1CrW5Z4K0mt9_Oq0kawJfXXED-J8y4VXBnY4bJtMzQbPAAgEkMwbdI1D7l6TMwrcHRW7cQtz18HLzJBRchJv8KCHXB8aLDKCvzWaWSIBsd56vveqv4on369kjnVtbufzYAIFHimEf3vVG_JAZ6SwVJsUPfUzbdhB2hRvdexAMHv6mytGlbwulJKsTgTAh1zir3i1oxfURXYMT52mC3sVxh6gB209HS7QEsVL_Yc1EPY9sj2ytzcH8KxL2LgAfspA4151fijS3buY7xufi6P4bo5YKgVO14LtAoPb6Bhki52R_pb08CQGAvltEqF1lPTn1cPRQg02tRiDNEAjxkCYqpc4SkpMoF_oNPfwEbmaHxNGde7NQbyxPBIaJvr8hyLNqtj_CNvUBCGl2xfvQ; path=/; secure; samesite=lax; httponly"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImRlbGl2ZXJlcjMiLCJyb2xlIjoiRGVsaXZlcmVyIiwibmJmIjoxNzExMzkzNDU2LCJleHAiOjE3MTEzOTcwNTYsImlhdCI6MTcxMTM5MzQ1NiwiaXNzIjoiTXlTaXN0ZW0iLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdCJ9.Kocnz50at64MYuLbijraeXrUVu3wKb1Ux8nnT0ihGng"
+						}
+					]
+				},
+				{
+					"name": "login-deliverer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"token-deliverer\", pm.response.text());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"deliverer\",\r\n  \"password\": \"Teste@123\"\r\n}"
+						},
+						"url": {
+							"raw": "https://localhost:7284/api/account/login",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"account",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Deliverer",
+			"item": [
+				{
+					"name": "upload-driver-license",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+								"key": "Authorization",
+								"value": "Bearer {{token-deliverer}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"contentType": "image/png",
+									"type": "file",
+									"src": "/C:/Users/pauli/Pictures/Captura de tela 2024-01-28 195002 - Copia.bmp"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:7284/api/deliverer/upload-driver-license",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"deliverer",
+								"upload-driver-license"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+										"key": "Authorization",
+										"value": "Bearer {{token-deliverer}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"contentType": "image/png",
+											"type": "file",
+											"src": "/C:/Users/pauli/Pictures/Screenshots/Captura de tela 2024-01-28 195002.png"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://localhost:7284/api/deliverer/upload-driver-license",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"deliverer",
+										"upload-driver-license"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 19:23:10 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "Driver's license photo uploaded successfully."
+						},
+						{
+							"name": "Incorrect format",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+										"key": "Authorization",
+										"value": "Bearer {{token-deliverer}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"contentType": "image/png",
+											"type": "file",
+											"src": "/C:/Users/pauli/Pictures/jpeg420exif.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://localhost:7284/api/deliverer/upload-driver-license",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"deliverer",
+										"upload-driver-license"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 19:34:42 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "Invalid file format. The driver's license must be a PNG or BMP image."
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token-deliverer}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Moto",
+			"item": [
+				{
+					"name": "get-moto",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+								"key": "Authorization",
+								"value": "{{token-admin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7284/api/moto",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"moto"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "get-moto",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+										"key": "Authorization",
+										"value": "{{token-admin}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://localhost:7284/api/moto",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"moto"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 18:45:52 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"year\": \"2024\",\n        \"model\": \"Yamaha\",\n        \"plate\": \"ABC1234\"\n    },\n    {\n        \"id\": 3,\n        \"year\": \"2023\",\n        \"model\": \"Teste\",\n        \"plate\": \"FFF2456\"\n    },\n    {\n        \"id\": 4,\n        \"year\": \"string\",\n        \"model\": \"string\",\n        \"plate\": \"HFT1465\"\n    },\n    {\n        \"id\": 5,\n        \"year\": \"2020\",\n        \"model\": \"Ninja 650\",\n        \"plate\": \"GHI9012\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "post-moto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+								"key": "Authorization",
+								"value": "{{token-admin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"year\": \"2020\",\r\n  \"model\": \"Ninja 650\",\r\n  \"plate\": \"GHI9A15\"\r\n}"
+						},
+						"url": {
+							"raw": "https://localhost:7284/api/moto",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"moto"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Plate exist",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "text/plain"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+										"key": "Authorization",
+										"value": "{{token-admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"year\": \"2021\",\r\n  \"model\": \"GSX-R750\",\r\n  \"plate\": \"ABC1234\"\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:7284/api/moto",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"moto"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 18:19:25 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "Plate already exists."
+						},
+						{
+							"name": "Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "text/plain"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+										"key": "Authorization",
+										"value": "{{token-admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"year\": \"2020\",\r\n  \"model\": \"Ninja 650\",\r\n  \"plate\": \"GHI9012\"\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:7284/api/moto",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"moto"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 18:19:47 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Location",
+									"value": "https://localhost:7284/api/moto/GHI9012"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 5,\n    \"year\": \"2020\",\n    \"model\": \"Ninja 650\",\n    \"plate\": \"GHI9012\"\n}"
+						},
+						{
+							"name": "Invalid plate",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "text/plain"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+										"key": "Authorization",
+										"value": "{{token-admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"year\": \"2020\",\r\n  \"model\": \"Ninja 650\",\r\n  \"plate\": \"GHI9A012\"\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:7284/api/moto",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"moto"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 18:20:23 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "Invalid plate format."
+						},
+						{
+							"name": "Required fields",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "text/plain"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+										"key": "Authorization",
+										"value": "{{token-admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:7284/api/moto",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"moto"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/problem+json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 18:24:42 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"type\": \"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\n    \"title\": \"One or more validation errors occurred.\",\n    \"status\": 400,\n    \"errors\": {\n        \"Year\": [\n            \"Year is required\"\n        ],\n        \"Model\": [\n            \"Model is required\"\n        ],\n        \"Plate\": [\n            \"Plate is required\"\n        ]\n    },\n    \"traceId\": \"00-2f174763fa163aa45141364b6b9c1d0e-517ec68db20d9ad2-00\"\n}"
+						}
+					]
+				},
+				{
+					"name": "get-moto/{plate}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7284/api/moto/ABC1234",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"moto",
+								"ABC1234"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "ABC1234",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "text/plain"
+									}
+								],
+								"url": {
+									"raw": "https://localhost:7284/api/moto/ABC1234",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"moto",
+										"ABC1234"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 18:38:59 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"year\": \"2024\",\n    \"model\": \"Yamaha\",\n    \"plate\": \"ABC1234\"\n}"
+						},
+						{
+							"name": "NotFound",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "text/plain"
+									}
+								],
+								"url": {
+									"raw": "https://localhost:7284/api/moto/ABC1231",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"moto",
+										"ABC1231"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/problem+json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 18:40:32 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"type\": \"https://tools.ietf.org/html/rfc9110#section-15.5.5\",\n    \"title\": \"Not Found\",\n    \"status\": 404,\n    \"traceId\": \"00-3b79e71c9a05d12ef2541891b805c550-d56802d75b34ba01-00\"\n}"
+						}
+					]
+				},
+				{
+					"name": "put-moto/{id}?plate={plate}",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7284/api/moto/2?plate=DDD1834",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"moto",
+								"2"
+							],
+							"query": [
+								{
+									"key": "plate",
+									"value": "DDD1834"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Invalid plate",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "https://localhost:7284/api/moto/2?plate=GGGG12545",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"moto",
+										"2"
+									],
+									"query": [
+										{
+											"key": "plate",
+											"value": "GGGG12545"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 18:42:54 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "Invalid plate format."
+						},
+						{
+							"name": "Plate exist",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "https://localhost:7284/api/moto/2?plate=ABC1234",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"moto",
+										"2"
+									],
+									"query": [
+										{
+											"key": "plate",
+											"value": "ABC1234"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 18:43:12 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "Plate already exists."
+						}
+					]
+				},
+				{
+					"name": "delete-moto/{id}",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7284/api/moto/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"moto",
+								"1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Unable to delete",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "https://localhost:7284/api/moto/1",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"moto",
+										"1"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 18:52:51 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "Unable to delete. The moto has rental records."
+						},
+						{
+							"name": "Deleted",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "https://localhost:7284/api/moto/3",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"moto",
+										"3"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 18:53:20 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token-admin}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Rental",
+			"item": [
+				{
+					"name": "rent/{rentalPlan}",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token-deliverer}}"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7284/api/rental/rent/7",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"rental",
+								"rent",
+								"7"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "No moto available",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token-deliverer}}"
+									}
+								],
+								"url": {
+									"raw": "https://localhost:7284/api/rental/rent/7",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"rental",
+										"rent",
+										"7"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 20:09:28 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "No moto available for rent."
+						},
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token-deliverer}}"
+									}
+								],
+								"url": {
+									"raw": "https://localhost:7284/api/rental/rent/7",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"rental",
+										"rent",
+										"7"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 20:12:12 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"motoId\": 6,\n    \"plate\": \"GHI9A15\",\n    \"rentalId\": 8,\n    \"startDate\": \"26/03/2024\",\n    \"predictedEndDate\": \"02/04/2024\",\n    \"message\": \"Moto rented successfully.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "return/{rentalId}",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token-deliverer}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"2024-03-31T19:38:03.878Z\""
+						},
+						"url": {
+							"raw": "https://localhost:7284/api/rental/return/8",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"rental",
+								"return",
+								"8"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Return = Predicted end",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token-deliverer}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "\"2024-04-01T19:38:03.878Z\""
+								},
+								"url": {
+									"raw": "https://localhost:7284/api/rental/return/8",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"rental",
+										"return",
+										"8"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 20:52:29 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"totalCost\": 210\n}"
+						},
+						{
+							"name": "Return > Predicted end",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token-deliverer}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "\"2024-04-02T19:38:03.878Z\""
+								},
+								"url": {
+									"raw": "https://localhost:7284/api/rental/return/8",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"rental",
+										"return",
+										"8"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 20:53:12 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"totalCost\": 260\n}"
+						},
+						{
+							"name": "Return < Predicted end",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token-deliverer}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "\"2024-03-31T19:38:03.878Z\""
+								},
+								"url": {
+									"raw": "https://localhost:7284/api/rental/return/8",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"rental",
+										"return",
+										"8"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Mar 2024 20:53:58 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"totalCost\": 186\n}"
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token-deliverer}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "get-order",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token-admin}}"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7284/api/order",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"order"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token-admin}}"
+									}
+								],
+								"url": {
+									"raw": "https://localhost:7284/api/order",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"order"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 26 Mar 2024 01:19:45 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"orderId\": 1,\n        \"creationDate\": \"24/03/2024 15:41\",\n        \"ridePrice\": 50.5,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 2,\n        \"creationDate\": \"24/03/2024 16:20\",\n        \"ridePrice\": 100,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 3,\n        \"creationDate\": \"24/03/2024 16:35\",\n        \"ridePrice\": 100,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 4,\n        \"creationDate\": \"24/03/2024 16:58\",\n        \"ridePrice\": 100,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 5,\n        \"creationDate\": \"24/03/2024 17:15\",\n        \"ridePrice\": 100,\n        \"status\": \"Delivered\",\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\",\n        \"deliveryDate\": \"24/03/2024 18:02\"\n    },\n    {\n        \"orderId\": 6,\n        \"creationDate\": \"25/03/2024 21:01\",\n        \"ridePrice\": 200,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 7,\n        \"creationDate\": \"25/03/2024 21:15\",\n        \"ridePrice\": 200,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 8,\n        \"creationDate\": \"25/03/2024 21:17\",\n        \"ridePrice\": 200,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 9,\n        \"creationDate\": \"25/03/2024 21:18\",\n        \"ridePrice\": 200,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 10,\n        \"creationDate\": \"25/03/2024 21:20\",\n        \"ridePrice\": 200,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 11,\n        \"creationDate\": \"25/03/2024 21:21\",\n        \"ridePrice\": 200,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 12,\n        \"creationDate\": \"25/03/2024 21:25\",\n        \"ridePrice\": 200,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 13,\n        \"creationDate\": \"25/03/2024 21:25\",\n        \"ridePrice\": 200,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 14,\n        \"creationDate\": \"25/03/2024 21:27\",\n        \"ridePrice\": 200,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 15,\n        \"creationDate\": \"25/03/2024 21:31\",\n        \"ridePrice\": 200,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 16,\n        \"creationDate\": \"25/03/2024 21:41\",\n        \"ridePrice\": 200,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 17,\n        \"creationDate\": \"25/03/2024 21:45\",\n        \"ridePrice\": 200,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 18,\n        \"creationDate\": \"25/03/2024 22:06\",\n        \"ridePrice\": 200,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 19,\n        \"creationDate\": \"25/03/2024 22:06\",\n        \"ridePrice\": 200,\n        \"status\": \"Available\",\n        \"delivererId\": null,\n        \"delivererUserName\": null,\n        \"delivererName\": null,\n        \"deliveryDate\": null\n    },\n    {\n        \"orderId\": 20,\n        \"creationDate\": \"25/03/2024 22:16\",\n        \"ridePrice\": 200,\n        \"status\": \"Delivered\",\n        \"delivererId\": \"2a345b7d-6322-4bc9-8715-0508ec69ebc7\",\n        \"delivererUserName\": \"deliverer\",\n        \"delivererName\": \"Paulinho\",\n        \"deliveryDate\": \"25/03/2024 22:19\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "post-order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token-admin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"creationDate\": \"2024-03-27T00:00:49.458Z\",\r\n  \"ridePrice\": 200,\r\n  \"status\": 0\r\n}"
+						},
+						"url": {
+							"raw": "https://localhost:7284/api/order",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"order"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "order",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token-admin}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"creationDate\": \"2024-03-27T00:00:49.458Z\",\r\n  \"ridePrice\": 200,\r\n  \"status\": 0\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:7284/api/order",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"order"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 26 Mar 2024 00:15:46 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"orderId\": 7,\n    \"message\": \"Order created.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "take-order/{orderId}",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token-deliverer}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7284/api/order/take-order/20",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"order",
+								"take-order",
+								"20"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token-deliverer}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://localhost:7284/api/order/take-order/20",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"order",
+										"take-order",
+										"20"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 26 Mar 2024 01:19:01 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "Order 20 accepted."
+						}
+					]
+				},
+				{
+					"name": "deliver-order/{orderId}",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token-deliverer}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7284/api/order/deliver-order/20",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"order",
+								"deliver-order",
+								"20"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token-deliverer}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://localhost:7284/api/order/deliver-order/20",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"order",
+										"deliver-order",
+										"20"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 26 Mar 2024 01:19:26 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "Order 20 delivered."
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Notification",
+			"item": [
+				{
+					"name": "get-notification",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token-admin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7284/api/notification",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"notification"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token-admin}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://localhost:7284/api/notification",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"notification"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 26 Mar 2024 01:20:47 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"notificationId\": 1,\n        \"notificationDate\": \"24/03/2024 17:17\",\n        \"orderId\": 5,\n        \"orderStatus\": \"Delivered\",\n        \"deliveryDate\": \"24/03/2024 18:02\",\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 2,\n        \"notificationDate\": \"25/03/2024 21:18\",\n        \"orderId\": 8,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 3,\n        \"notificationDate\": \"25/03/2024 21:18\",\n        \"orderId\": 8,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"2a345b7d-6322-4bc9-8715-0508ec69ebc7\",\n        \"delivererUserName\": \"deliverer\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 4,\n        \"notificationDate\": \"25/03/2024 21:19\",\n        \"orderId\": 9,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 5,\n        \"notificationDate\": \"25/03/2024 21:20\",\n        \"orderId\": 10,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 6,\n        \"notificationDate\": \"25/03/2024 21:20\",\n        \"orderId\": 10,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"2a345b7d-6322-4bc9-8715-0508ec69ebc7\",\n        \"delivererUserName\": \"deliverer\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 7,\n        \"notificationDate\": \"25/03/2024 21:21\",\n        \"orderId\": 11,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 8,\n        \"notificationDate\": \"25/03/2024 21:33\",\n        \"orderId\": 15,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 9,\n        \"notificationDate\": \"25/03/2024 21:39\",\n        \"orderId\": 15,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 10,\n        \"notificationDate\": \"25/03/2024 21:41\",\n        \"orderId\": 16,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 11,\n        \"notificationDate\": \"25/03/2024 21:46\",\n        \"orderId\": 17,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 12,\n        \"notificationDate\": \"25/03/2024 21:46\",\n        \"orderId\": 17,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"2a345b7d-6322-4bc9-8715-0508ec69ebc7\",\n        \"delivererUserName\": \"deliverer\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 13,\n        \"notificationDate\": \"25/03/2024 21:51\",\n        \"orderId\": 17,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 14,\n        \"notificationDate\": \"25/03/2024 21:57\",\n        \"orderId\": 17,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 15,\n        \"notificationDate\": \"25/03/2024 22:02\",\n        \"orderId\": 17,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 16,\n        \"notificationDate\": \"25/03/2024 22:02\",\n        \"orderId\": 17,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"2a345b7d-6322-4bc9-8715-0508ec69ebc7\",\n        \"delivererUserName\": \"deliverer\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 17,\n        \"notificationDate\": \"25/03/2024 22:09\",\n        \"orderId\": 18,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 18,\n        \"notificationDate\": \"25/03/2024 22:09\",\n        \"orderId\": 19,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 19,\n        \"notificationDate\": \"25/03/2024 22:09\",\n        \"orderId\": 19,\n        \"orderStatus\": \"Available\",\n        \"deliveryDate\": null,\n        \"delivererId\": \"2a345b7d-6322-4bc9-8715-0508ec69ebc7\",\n        \"delivererUserName\": \"deliverer\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 20,\n        \"notificationDate\": \"25/03/2024 22:18\",\n        \"orderId\": 20,\n        \"orderStatus\": \"Delivered\",\n        \"deliveryDate\": \"25/03/2024 22:19\",\n        \"delivererId\": \"19345b87-4394-4e23-ab11-5a0c6d12059e\",\n        \"delivererUserName\": \"deliverer2\",\n        \"delivererName\": \"Paulinho\"\n    },\n    {\n        \"notificationId\": 21,\n        \"notificationDate\": \"25/03/2024 22:18\",\n        \"orderId\": 20,\n        \"orderStatus\": \"Delivered\",\n        \"deliveryDate\": \"25/03/2024 22:19\",\n        \"delivererId\": \"2a345b7d-6322-4bc9-8715-0508ec69ebc7\",\n        \"delivererUserName\": \"deliverer\",\n        \"delivererName\": \"Paulinho\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "post-notification",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token-admin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7284/api/notification",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7284",
+							"path": [
+								"api",
+								"notification"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Started consuming",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token-admin}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://localhost:7284/api/notification",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7284",
+									"path": [
+										"api",
+										"notification"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 26 Mar 2024 01:18:52 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "Started consuming notifications."
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token-admin",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "token-deliverer",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

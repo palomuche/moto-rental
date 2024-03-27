@@ -11,19 +11,19 @@
 
         public string UploadPhoto(IFormFile file)
         {
-            // Verifica se o diretório de armazenamento existe, se não, cria
+            // Checks if the storage directory exists, if not, creates it
             if (!Directory.Exists(_storageDirectory))
             {
                 Directory.CreateDirectory(_storageDirectory);
             }
 
-            // Gera um nome de arquivo único para evitar colisões
+            // Generates a unique file name to avoid collisions
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
 
-            // Combina o caminho completo do arquivo
+            // Combines the full file path
             var filePath = Path.Combine(_storageDirectory, fileName);
 
-            // Salva o arquivo no disco
+            // Saves the file to disk
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 file.CopyToAsync(stream);
@@ -34,7 +34,7 @@
 
         public byte[] GetFileBytes(string filePath)
         {
-            // Lê os bytes do arquivo no disco
+            // Reads the file bytes from disk
             return File.ReadAllBytes(filePath);
         }
     }
